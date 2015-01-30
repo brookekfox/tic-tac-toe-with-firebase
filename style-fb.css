@@ -1,0 +1,43 @@
+body{
+	/*background: url('http://www.rabne.tk/wp-content/uploads/2015/01/simple-girly-twitter-background.jpg');*/
+	background: url('http://www.clipartbest.com/cliparts/yck/GRA/yckGRAK7i.png');
+}
+h1 {
+	font-size: 52pt;
+	font-family: 'Lobster Two', cursive;
+	text-align: center;
+	margin-bottom: -80px;
+	color: #f0f0f0;
+	border: 8px double #f0f0f0;
+	background-color: rgba(0,153,0,.4);
+	width: 30%;
+	margin-left: 35%;
+	margin-right: 35%;
+}
+#container {
+	width: 450px;
+	height: 450px;
+	border: 2px dotted #f0f0f0;
+	border-radius: 10px;
+	background-color: rgba(240,240,240,.7);
+	padding: 80px;
+	margin: 10% auto;
+}
+.square {
+	display: inline-block;
+	width: 110px;
+	height: 110px;
+	border: 2px solid green;
+	margin: 5px;
+	padding: 2%;
+}
+.xSelected {
+    background: url('https://cdn3.iconfinder.com/data/icons/metro-vacation/512/gamepad-512.png');
+	background-size: 110px 110px;
+    background-repeat: no-repeat;
+}
+.oSelected {
+	background: url('http://wcdn4.dataknet.com/static/resources/icons/set34/17f9a6c8.png');
+	background-size: 110px 110px;
+    background-repeat: no-repeat;
+}
