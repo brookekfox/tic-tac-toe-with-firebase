@@ -1,6 +1,6 @@
 {
   "firebase": "my-tic-tac-toe-1",
-  "public": ".",
+  "public": "/Users/brookefox/Dropbox/wdi/projects/1-tic-tac-toe/tic-tac-toe-with-firebase",
   "ignore": [
     "firebase.json",
     "**/.*",

@@ -2,17 +2,9 @@ var app = angular.module('tictacApp', ['firebase']);
 
 app.controller('tictacController', function ($scope, $firebase) {
 
-	var ref = new Firebase("https://my-tic-tac-toe-1.firebaseio.com/board");
-	var sync = $firebase(ref);
-	$scope.board = sync.$asArray();
-
-	var counterRef = new Firebase("https://my-tic-tac-toe-1.firebaseio.com/counter");
-	var counterSync = $firebase(counterRef);
-	$scope.counter = counterSync.$asArray();
-
-	var playersRef = new Firebase("https://my-tic-tac-toe-1.firebaseio.com/players");
-	var playersSync = $firebase(playersRef);
-	$scope.players = playersSync.$asArray();
+	$scope.board = $firebase(new Firebase("https://my-tic-tac-toe-1.firebaseio.com/board")).$asArray();
+	$scope.counter = $firebase(new Firebase("https://my-tic-tac-toe-1.firebaseio.com/counter")).$asArray();
+	$scope.players = $firebase(new Firebase("https://my-tic-tac-toe-1.firebaseio.com/players")).$asArray();
 
 	$scope.board.$loaded(function () {
 		if ($scope.board.length === 0) {
@@ -43,7 +35,7 @@ app.controller('tictacController', function ($scope, $firebase) {
 			diagonalCount: [0,0],
 			winCount: 0
 		});
-
+        
 	});
 
 	$scope.counter.$loaded(function () {
@@ -181,26 +173,94 @@ app.controller('tictacController', function ($scope, $firebase) {
 					$scope.players[$scope.players.length-2].columnCount[k] == 3 ||
 					$scope.players[$scope.players.length-2].diagonalCount[k] == 3) {
 				alert("The Nintendo controller wins!");
-				// $scope.players[$scope.players.length-2].winCount++;
-				// $scope.players.$save($scope.players[$scope.players.length-2]);
-				console.log($scope.players[$scope.players.length-2]);
+				$scope.players[$scope.players.length-2].winCount++;
+				$scope.players.$save($scope.players[$scope.players.length-2]);
+				$scope.reset();
 
 			} else if (	$scope.players[$scope.players.length-1].rowCount[k] == 3 ||
 						$scope.players[$scope.players.length-1].columnCount[k] == 3 ||
 						$scope.players[$scope.players.length-1].diagonalCount[k] == 3) {
 				alert("The spaceship wins!");
-				// $scope.players[$scope.players.length-1].winCount++;
-				// $scope.players.$save($scope.players[$scope.players.length-1]);
-				console.log($scope.players[$scope.players.length-1]);
+				$scope.players[$scope.players.length-1].winCount++;
+				$scope.players.$save($scope.players[$scope.players.length-1]);
+				$scope.reset();
 
 			} else if ($scope.counter[0].turnCounter == 9) {
 				alert("It's a tie!");
-				console.log($scope.counter[0].turnCounter);
-				$scope.counter[0].turnCounter = 0;
-				$scope.counter.$save($scope.counter[0]);
-				console.log($scope.counter[0].turnCounter);
+				$scope.reset();
 			}
 		}
+	}
+
+	$scope.reset = function () {
+		if ($scope.board.length === 0) {
+			for (var i = 0; i < 9; i++) {
+				$scope.board.$add({letterOnBoard: ''});
+			}
+		} else {
+			for (var i = 0; i < 9; i++) {
+				$scope.board[i].letterOnBoard = '';
+				$scope.board.$save($scope.board[i]);
+			}
+		}
+
+		$scope.players[$scope.players.length-2].rowCount = [0,0,0];
+		$scope.players[$scope.players.length-2].columnCount = [0,0,0];
+		$scope.players[$scope.players.length-2].diagonalCount = [0,0,0];
+		$scope.players.$save($scope.players[$scope.players.length-2]);
+		$scope.players[$scope.players.length-1].rowCount = [0,0,0];
+		$scope.players[$scope.players.length-1].columnCount = [0,0,0];
+		$scope.players[$scope.players.length-1].diagonalCount = [0,0,0];
+		$scope.players.$save($scope.players[$scope.players.length-1]);
+
+		$scope.counter[0].turnCounter = 0;
+		$scope.counter[0].currentPlayer = 'x';
+		$scope.counter.$save($scope.counter[0]);
+	}
+
+	$scope.newGame = function () {
+		if ($scope.board.length === 0) {
+			for (var i = 0; i < 9; i++) {
+				$scope.board.$add({letterOnBoard: ''});
+			}
+		} else {
+			for (var i = 0; i < 9; i++) {
+				$scope.board[i].letterOnBoard = '';
+				$scope.board.$save($scope.board[i]);
+			}
+		}
+
+		if ($scope.players.length != 0) {
+			$scope.players[$scope.players.length-2].rowCount = [0,0,0];
+			$scope.players[$scope.players.length-2].columnCount = [0,0,0];
+			$scope.players[$scope.players.length-2].diagonalCount = [0,0,0];
+			$scope.players[$scope.players.length-2].winCount = 0;
+			$scope.players.$save($scope.players[$scope.players.length-2]);
+			$scope.players[$scope.players.length-1].rowCount = [0,0,0];
+			$scope.players[$scope.players.length-1].columnCount = [0,0,0];
+			$scope.players[$scope.players.length-1].diagonalCount = [0,0,0];
+			$scope.players[$scope.players.length-1].winCount = 0;
+			$scope.players.$save($scope.players[$scope.players.length-1]);
+		} else {
+			$scope.players.$add( {
+				xORo: 'x',
+				rowCount: [0,0,0],
+				columnCount: [0,0,0],
+				diagonalCount: [0,0],
+				winCount: 0
+			});
+			$scope.players.$add( {
+				xORo: 'o',
+				rowCount: [0,0,0],
+				columnCount: [0,0,0],
+				diagonalCount: [0,0],
+				winCount: 0
+			});
+		}
+
+		$scope.counter[0].turnCounter = 0;
+		$scope.counter[0].currentPlayer = 'x';
+		$scope.counter.$save($scope.counter[0]);
 	}
 
 
