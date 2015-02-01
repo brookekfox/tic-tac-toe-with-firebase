@@ -6,7 +6,7 @@ app.controller('tictacController', function ($scope, $firebase) {
 	$scope.counter = $firebase(new Firebase("https://my-tic-tac-toe-1.firebaseio.com/counter")).$asArray();
 	$scope.players = $firebase(new Firebase("https://my-tic-tac-toe-1.firebaseio.com/players")).$asArray();
 
-	$scope.board.$loaded(function () {
+	$scope.board.$loaded().then(function () {
 		if ($scope.board.length === 0) {
 			for (var i = 0; i < 9; i++) {
 				$scope.board.$add({letterOnBoard: ''});
@@ -38,7 +38,7 @@ app.controller('tictacController', function ($scope, $firebase) {
         
 	});
 
-	$scope.counter.$loaded(function () {
+	$scope.counter.$loaded().then(function () {
 		if ($scope.counter.length === 0) {
 			$scope.counter.$add({turnCounter: 0, currentPlayer: 'x'});
 		} else {
@@ -51,13 +51,14 @@ app.controller('tictacController', function ($scope, $firebase) {
 	$scope.squareClick = function (index) {
 		if (	$scope.counter[0].turnCounter % 2 == 0 && //if it's an even turn (for x)
 				$scope.board[index].letterOnBoard == '' && //if the space is empty
-				$scope.counter[0].currentPlayer == 'x' //if x is the current player
+				$scope.counter[0].currentPlayer == 'x'
 		  ) {
 			$scope.board[index].letterOnBoard = 'x';
 			$scope.board.$save($scope.board[index]);
 			$scope.counter[0].turnCounter++;
 			$scope.counter[0].currentPlayer = 'o';
 			$scope.counter.$save($scope.counter[0]);
+
 			if (index == 0) {
 				$scope.players[$scope.players.length-2].rowCount[0]++;
 				$scope.players[$scope.players.length-2].columnCount[0]++;
